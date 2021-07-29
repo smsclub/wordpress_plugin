@@ -4,7 +4,7 @@ Plugin Name: SMS CLUB Messages
 Description: Send SMS plugin
 Author: SMS CLUB
 Author URI: https://smsclub.mobi
-Version: 1.0
+Version: 4.7
 License: GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -394,14 +394,10 @@ function transliterate($input){
     return strtr($input, $gost);
 }
 
-
 add_action('wp_ajax_translit_message', 'translit_message');
 function translit_message() {
-    if (preg_match('/[a-z]/i', $_POST['message'])) {
-        $message = transliterateen($_POST['message']);
-    } else {
-        $message = transliterate($_POST['message']);
-    }
+	$message = sanitize_textarea_field($_POST['message']);
+	$message = preg_match('/[a-z]/i', $message) ? transliterateen($message) : transliterate($message);
 
 	echo esc_textarea($message);
 }
